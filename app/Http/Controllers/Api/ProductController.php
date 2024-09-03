@@ -46,7 +46,7 @@ class ProductController extends Controller
 
     public function detail(Product $product)
     {
-        $product = $product->load(["category:id,name"]);
+        $product = $product->load(["category:id,name", 'comments']);
 
         return response()->json($product);
     }

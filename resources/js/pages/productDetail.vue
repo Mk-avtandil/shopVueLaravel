@@ -6,15 +6,22 @@
     const route = useRoute()
     const product = ref({})
     const category = ref();
+    const comment = ref();
 
     onMounted(async () => {
         product.value = (await axios.get(`/api/products/detail/${route.params.id}`)).data
-        category.value = product.value.category.name;
     })
 
     const addProductToCart = async (id) => {
         await axios.post(`/api/carts/add/${id}`);
     }
+
+    const createComment = async () => {
+        await axios.post(`/api/comments/${route.params.id}/save`, {body: comment.value}).then(async () => {
+            product.value = (await axios.get(`/api/products/detail/${route.params.id}`)).data
+        });
+        comment.value = '';
+    };
 </script>
 
 
@@ -35,29 +42,54 @@
         </div>
     </nav>
     <div class="container">
-        <h2 class="mt-3">Продукт</h2>
-        <table class="table w-75 table-striped">
-            <tr>
-                <td><strong>Название: </strong>{{ product.name }}</td>
-            </tr>
-            <tr>
-                <td><strong>Цена: </strong>{{ product.price }}</td>
-            </tr>
-            <tr>
-                <td><strong>Описание: </strong>{{ product.description }}</td>
-            </tr>
-            <tr>
-                <td><strong>Категория: </strong>{{ category }}</td>
-            </tr>
-            <tr>
-                <td><strong>Дата создания: </strong>{{ product.created_at }}</td>
-            </tr>
-            <tr>
-                <td><strong>Дата обновления: </strong>{{ product.updated_at }}</td>
-            </tr>
-        </table>
-        <router-link :to="{name: 'editeProductUrl', params: {id: product.id}}" class="btn btn-warning w-75">Изменить</router-link>
-        <button class="w-75 my-2 btn btn-success" @click.prevent="addProductToCart(product.id)">Добавить в корзину</button>
+        <div class="row">
+            <div class="col-6">
+                <h2 class="mt-3">Продукт</h2>
+                <table class="table table-striped">
+                    <tr>
+                        <td><strong>Название: </strong>{{ product.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Цена: </strong>{{ product.price }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Описание: </strong>{{ product.description }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Категория: </strong>{{ product.category?.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Дата создания: </strong>{{ product.created_at }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Дата обновления: </strong>{{ product.updated_at }}</td>
+                    </tr>
+                </table>
+                <router-link :to="{name: 'editeProductUrl', params: {id: product.id}}" class="btn btn-warning w-100">Изменить</router-link>
+                <button class="w-100 my-2 btn btn-success" @click.prevent="addProductToCart(product.id)">Добавить в корзину</button>
+            </div>
+
+            <div class="col-6">
+                <h2 class="mt-3">Оставить комментарий</h2>
+                <form action="" method="POST">
+                    <div class="form-group">
+                        <textarea  class="form-control" rows="8" cols="45" v-model="comment" name="comment"></textarea>
+                    </div>
+                    <div class="form-group my-3">
+                        <button @click.prevent="createComment()" class="btn btn-primary" type="submit">Отправить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-12">
+                <h2 class="mt-3">Комментарии</h2>
+                <template v-for="comment in product.comments">
+                    <span>user: @avtandil</span>
+                    <p class="text-muted">Comment: {{ comment.body}}</p>
+                </template>
+            </div>
+        </div>
     </div>
 </template>
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CommentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,12 @@ Route::prefix('products')
         Route::delete('/delete/{product:id}', [ProductController::class, 'delete'])->name('delete');
         Route::get('/detail/{product:id}', [ProductController::class, 'detail'])->name('detail');
         Route::get('/edit/{product:id}', [ProductController::class, 'edit'])->name('edit');
+    });
+
+Route::prefix('comments')
+    ->name('comment.')
+    ->group(function () {
+        Route::post('/{product:id}/save', [CommentController::class, 'save'])->name('save');
     });
 
 Route::prefix('categories')
