@@ -4,11 +4,25 @@ import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 
 const route = useRoute()
-const product = ref({});
+const product = ref({
+    name: '',
+    price: '',
+    description: '',
+    category_id: ''
+});
 
 onMounted(async () => {
     product.value = (await axios.get(`/api/products/edit/${route.params.id}`)).data;
 })
+
+const updateProduct = async () => {
+    await axios.put(`/api/products/update/${route.params.id}`, {
+        name: product.value.name,
+        price: product.value.price,
+        description: product.value.description,
+        category_id: product.value.category_id
+    })
+};
 </script>
 
 <template>
@@ -41,12 +55,12 @@ onMounted(async () => {
             </div>
             <div class="form-group">
                 <label>Категория</label>
-                <select class="custom-select form-control" v-model="product.category_id" name="category_id">
-                    <option value="{{ product.category_id }}">{{product.category}}</option>
+                <select class="custom-select form-control" v-model="product.category_id">
+                    <option :value=product.category_id>{{ product.category?.name }}</option>
                 </select>
             </div>
             <div class="form-group my-3">
-                <button class="btn btn-primary" type="submit">Сохранить</button>
+                <button @click.prevent="updateProduct()" class="btn btn-primary mx-2" type="submit">Сохранить</button>
             </div>
         </form>
     </div>

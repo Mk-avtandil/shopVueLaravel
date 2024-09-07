@@ -1,34 +1,52 @@
-<script setup>
+<script>
     import axios from "axios";
     import {ref} from "vue";
+    import { useRouter } from "vue-router";
 
-    const data = ref({
-        email: '',
-        password: ''
-    });
+    export default {
+        setup() {
+            const router = useRouter();
+            const data = ref({
+                email: '',
+                password: ''
+            });
 
-    const errors = ref({
-        email: '',
-        password: ''
-    });
+            const errors = ref({
+                email: '',
+                password: '',
+                fatal: ''
+            });
 
-    const login = async () => {
-        await axios.post('/api/login', {
-            email: data.value.email,
-            password: data.value.password
-        }).then((res) => {
-            localStorage.setItem("token", res.data.access_token);
-            console.log("Login successful");
-        }).catch(error => {
-            if (error.response?.data.errors) {
-                Object.keys(error.response.data.errors).map(key => {
-                    errors.value[key] = error.response.data.errors[key][0]
-                    errors.value.fatal = error.response.data.errors[key][0]
-                })
-            }
-            console.log("Something was wrong");
-        });
-    }
+            const login = async () => {
+                try {
+                    const response = await axios.post('/api/login', {
+                        email: data.value.email,
+                        password: data.value.password
+                    });
+
+                    localStorage.setItem("token", response.data.access_token);
+
+                    router.push({name: 'products_page'});
+
+                }catch (error) {
+                    if (error.response?.data.errors) {
+                        Object.keys(error.response.data.errors).forEach(key => {
+                            errors.value[key] = error.response.data.errors[key][0];
+                        });
+                        errors.value.fatal = "There were errors in your submission.";
+                    } else {
+                        console.error("Something went wrong", error);
+                    }
+                }
+            };
+
+            return {
+                data,
+                errors,
+                login
+            };
+        }
+    };
 </script>
 
 <template>
@@ -47,7 +65,7 @@
     <div class="container">
         <div class="login_page w-50 my-5 mx-auto">
             <h2 class=" text-center">Login</h2>
-            <form @submit.prevent>
+            <form @submit.prevent="login">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
                     <input v-model="data.email" class="form-control" type="email" id="email" required/>

@@ -6,11 +6,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CommentController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -25,6 +21,7 @@ Route::prefix('products')
         Route::delete('/delete/{product:id}', [ProductController::class, 'delete'])->name('delete');
         Route::get('/detail/{product:id}', [ProductController::class, 'detail'])->name('detail');
         Route::get('/edit/{product:id}', [ProductController::class, 'edit'])->name('edit');
+        Route::put('/update/{product:id}', [ProductController::class, 'update'])->name('update');
     });
 
 Route::prefix('comments')

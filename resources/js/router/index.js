@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
+
     {
         path: "/",
+        name: "products_page",
         component: () => import("../pages/productShow.vue"),
     },
     {
@@ -38,11 +40,16 @@ const routes = [
     },
     {
         path: "/login",
+        name: "login_page",
         component: () => import("../pages/loginComponent.vue"),
     },
     {
         path: "/register",
         component: () => import("../pages/registerComponent.vue"),
+    },
+    {
+        path: "/user",
+        component: () => import("../pages/productShow.vue"),
     },
 ];
 

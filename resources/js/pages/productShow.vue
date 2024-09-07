@@ -1,11 +1,16 @@
 <script setup>
 import axios from "axios";
 import {onMounted, ref} from "vue";
+import { useRouter } from 'vue-router';
 
 const products = ref();
+const router = useRouter();
+const user = ref(null);
+const token = localStorage.getItem('token');
 
 onMounted(async () => {
-    await getProducts()
+    await getProducts();
+    await fetchUser();
 })
 
 const deleteProduct = async (id) => {
@@ -20,6 +25,35 @@ const getProducts = async () => {
 const addProductToCart = async (id) => {
     await axios.post(`api/carts/add/${id}`);
 }
+
+const fetchUser = async () => {
+    try {
+        const response = await axios.get('/api/user', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        user.value = response.data;
+    } catch (error) {
+        console.error('Failed to fetch user', error);
+        router.push({ name: 'products_page' });
+    }
+};
+
+const logout = async () => {
+    try {
+        await axios.get('/api/logout', {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.reload();
+    } catch (error) {
+        console.error('Logout failed', error);
+    }
+};
 </script>
 
 <template>
@@ -47,8 +81,14 @@ const addProductToCart = async (id) => {
                     <li class="nav-item mx-2">
                         <router-link to="/showCart" class="btn bg-light" type="submit">Корзина</router-link>
                     </li>
-                    <li class="nav-item mx-2">
+                    <li class="nav-item mx-2" v-if="!user">
                         <router-link to="/login" class="btn bg-light" type="submit">Login</router-link>
+                    </li>
+                    <li class="nav-item max-2" v-if="user">
+                        <button class="btn bg-light">{{user?.name}}</button>
+                    </li>
+                    <li class="nav-item mx-2" v-if="user">
+                        <button class="btn bg-light" @click.prevent="logout()">Logout</button>
                     </li>
                 </ul>
             </div>
