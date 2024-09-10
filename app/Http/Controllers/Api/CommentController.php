@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentCreateRequest;
 use App\Models\Comment;
 use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
 
 class CommentController extends Controller
 {
@@ -16,5 +17,4 @@ class CommentController extends Controller
         ]);
         return response()->json($product);
     }
-
 }
