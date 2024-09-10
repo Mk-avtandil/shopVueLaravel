@@ -40,17 +40,18 @@
     <table class="table w-75">
       <tr>
         <th scope="col">Название</th>
-        <th scope="col"></th>
-        <th scope="col"></th>
+        <th scope="col">Кол-во связанных продуктов</th>
+        <th scope="col"></th><th scope="col"></th>
       </tr>
       <tr v-for="category in categories?.data">
-        <td>{{ category.name }}</td>
-        <td>
-            <router-link :to="{name: 'editCategoryUrl', params: {id: category.id}}" class="btn btn-info w-100">Изменить</router-link>
-        </td>
-        <td>
-            <button class="w-100 btn btn-danger" @click.prevent="deleteCategory(category.id)">Удалить</button>
-        </td>
+          <td>{{ category.name }}</td>
+          <td>{{ category.products_count }}шт</td>
+          <td>
+              <router-link :to="{name: 'editCategoryUrl', params: {id: category.id}}" class="btn btn-info w-100">Изменить</router-link>
+          </td>
+          <td>
+              <button class="w-100 btn btn-danger" @click.prevent="deleteCategory(category.id)">Удалить</button>
+          </td>
       </tr>
     </table>
   </div>

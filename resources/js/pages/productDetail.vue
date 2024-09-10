@@ -68,8 +68,9 @@
                 <router-link :to="{name: 'editeProductUrl', params: {id: product.id}}" class="btn btn-warning w-100">Изменить</router-link>
                 <button class="w-100 my-2 btn btn-success" @click.prevent="addProductToCart(product.id)">Добавить в корзину</button>
             </div>
-
-            <div class="col-6">
+        </div>
+        <div class="row mt-2">
+            <div class="col-12">
                 <h2 class="mt-3">Оставить комментарий</h2>
                 <form action="" method="POST">
                     <div class="form-group">
@@ -80,8 +81,6 @@
                     </div>
                 </form>
             </div>
-        </div>
-        <div class="row mt-2">
             <div class="col-12">
                 <h2 class="mt-3">Комментарии</h2>
                 <template v-for="comment in product.comments">

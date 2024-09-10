@@ -7,6 +7,8 @@ const products = ref();
 const router = useRouter();
 const user = ref(null);
 const token = localStorage.getItem('token');
+const pagination = ref({});
+
 
 onMounted(async () => {
     await getProducts();
@@ -18,8 +20,13 @@ const deleteProduct = async (id) => {
     await getProducts()
 }
 
-const getProducts = async () => {
-    products.value = (await axios.get('/api/products')).data
+const getProducts = async (url = '/api/products') => {
+    products.value = (await axios.get(url)).data;
+
+     pagination.value = {
+        prev_page_url: products.value.links.prev,
+        next_page_url: products.value.links.next
+    };
 }
 
 const addProductToCart = async (id) => {
@@ -117,6 +124,8 @@ const logout = async () => {
                     <button class="w-100 btn btn-danger" @click.prevent="deleteProduct(product.id)">Удалить</button>
                 </td>
             </tr>
+            <button class="btn btn-success text-light" @click.prevent="getProducts(pagination.prev_page_url)" :disabled="!pagination.prev_page_url">Предыдущая</button>
+            <button class="btn btn-success mx-2" @click.prevent="getProducts(pagination.next_page_url)" :disabled="!pagination.next_page_url">Cледующая</button>
         </table>
     </div>
     </body>
