@@ -7,9 +7,12 @@
     const product = ref({})
     const category = ref();
     const comment = ref();
+    const user = ref(null);
+    const token = localStorage.getItem('token');
 
     onMounted(async () => {
         product.value = (await axios.get(`/api/products/detail/${route.params.id}`)).data
+        await fetchUser();
     })
 
     const addProductToCart = async (id) => {
@@ -17,10 +20,43 @@
     }
 
     const createComment = async () => {
-        await axios.post(`/api/comments/${route.params.id}/save`, {body: comment.value}).then(async () => {
+        await axios.post(`/api/comments/${route.params.id}/save`, {body: comment.value}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(async () => {
             product.value = (await axios.get(`/api/products/detail/${route.params.id}`)).data
         });
         comment.value = '';
+    };
+
+    const fetchUser = async () => {
+        try {
+            const response = await axios.get('/api/user', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            user.value = response.data;
+        } catch (error) {
+            console.error('Failed to fetch user', error);
+            router.push({ name: 'products_page' });
+        }
+    };
+
+    const logout = async () => {
+        try {
+            await axios.get('/api/logout', {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.reload();
+        } catch (error) {
+            console.error('Logout failed', error);
+        }
     };
 </script>
 
@@ -34,8 +70,19 @@
                     <li class="nav-item mx-2">
                         <a href="/" class="btn bg-light" type="submit">Главная</a>
                     </li>
+                </ul>
+                <ul class="navbar-nav ms-auto p-2">
                     <li class="nav-item mx-2">
                         <router-link to="/showCart" class="btn bg-light" type="submit">Корзина</router-link>
+                    </li>
+                    <li class="nav-item mx-2" v-if="!user">
+                        <router-link to="/login" class="btn bg-light" type="submit">Login</router-link>
+                    </li>
+                    <li class="nav-item max-2" v-if="user">
+                        <button class="btn bg-light">{{user?.name}}</button>
+                    </li>
+                    <li class="nav-item mx-2" v-if="user">
+                        <button class="btn bg-light" @click.prevent="logout()">Logout</button>
                     </li>
                 </ul>
             </div>
@@ -65,12 +112,15 @@
                         <td><strong>Дата обновления: </strong>{{ product.updated_at }}</td>
                     </tr>
                 </table>
-                <router-link :to="{name: 'editeProductUrl', params: {id: product.id}}" class="btn btn-warning w-100">Изменить</router-link>
+                <div v-if="user">
+                    <router-link :to="{name: 'editeProductUrl', params: {id: product.id}}" class="btn btn-warning w-100">Изменить</router-link>
+                </div>
+                <div v-if="!user">
+                    <button class="btn btn-danger w-100">Авторизуйтесь для редактирования</button>
+                </div>
                 <button class="w-100 my-2 btn btn-success" @click.prevent="addProductToCart(product.id)">Добавить в корзину</button>
             </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-12">
+            <div class="col-6" v-if="user">
                 <h2 class="mt-3">Оставить комментарий</h2>
                 <form action="" method="POST">
                     <div class="form-group">
@@ -81,10 +131,12 @@
                     </div>
                 </form>
             </div>
+        </div>
+        <div class="row mt-2">
             <div class="col-12">
                 <h2 class="mt-3">Комментарии</h2>
                 <template v-for="comment in product.comments">
-                    <span>user: @avtandil</span>
+                    <span>user: {{user?.name}}</span>
                     <p class="text-muted">Comment: {{ comment.body}}</p>
                 </template>
             </div>

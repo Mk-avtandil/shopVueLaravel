@@ -20,14 +20,14 @@ Route::prefix('products')
         Route::post('/save', [ProductController::class, 'save'])->name('save');
         Route::delete('/delete/{product:id}', [ProductController::class, 'delete'])->name('delete');
         Route::get('/detail/{product:id}', [ProductController::class, 'detail'])->name('detail');
-        Route::get('/edit/{product:id}', [ProductController::class, 'edit'])->name('edit');
+        Route::get('/edit/{product:id}', [ProductController::class, 'edit'])->name('edit')->middleware('auth:sanctum');
         Route::put('/update/{product:id}', [ProductController::class, 'update'])->name('update');
     });
 
 Route::prefix('comments')
     ->name('comment.')
     ->group(function () {
-        Route::post('/{product:id}/save', [CommentController::class, 'save'])->name('save');
+        Route::post('/{product:id}/save', [CommentController::class, 'save'])->name('save')->middleware('auth:sanctum');
     });
 
 Route::prefix('categories')

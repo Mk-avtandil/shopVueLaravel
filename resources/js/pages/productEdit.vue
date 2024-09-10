@@ -3,6 +3,7 @@ import axios from "axios";
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 
+const token = localStorage.getItem('token');
 const route = useRoute()
 const product = ref({
     name: '',
@@ -12,7 +13,11 @@ const product = ref({
 });
 
 onMounted(async () => {
-    product.value = (await axios.get(`/api/products/edit/${route.params.id}`)).data;
+    product.value = (await axios.get(`/api/products/edit/${route.params.id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })).data;
 })
 
 const updateProduct = async () => {
