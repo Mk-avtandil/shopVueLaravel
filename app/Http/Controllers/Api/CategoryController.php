@@ -24,10 +24,8 @@ class CategoryController extends Controller
         return response()->json(['message' => 'Product created']);
     }
 
-    public function delete($id)
+    public function delete(Category $category)
     {
-        $category = Category::find($id);
-
         $category->delete();
 
         return response()->json(null, 204);
@@ -38,12 +36,10 @@ class CategoryController extends Controller
         return response()->json($category);
     }
 
-    public function update($id, CategoryCreateRequest $request)
+    public function update(Category $category, CategoryCreateRequest $request)
     {
         try {
-            $category = Category::findOrFail($id);
             $category->update(['name' => $request->get('name')]);
-            $category->save();
 
             return response()->json([
                 "message" => "Category updated successfully",

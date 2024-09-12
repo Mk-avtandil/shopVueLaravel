@@ -3,48 +3,53 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
     {
         path: "/",
-        name: "products_page",
+        name: "products_page_url",
         component: () => import("../pages/productShow.vue"),
     },
     {
-        path: "/createProduct",
+        path: "/create-product",
+        name: "create_product_url",
         component: () => import("../pages/productCreate.vue"),
     },
     {
-        name: "detailUrl",
         path: "/products/detail/:id",
+        name: "detail_product_url",
         component: () => import("../pages/productDetail.vue"),
     },
     {
-        name: "editeProductUrl",
         path: "/products/edit/:id",
+        name: "edite_product_url",
         component: () => import("../pages/productEdit.vue"),
     },
     {
-        path: "/showCategory",
+        path: "/show-category",
+        name: "show_category_url",
         component: () => import("../pages/categoryShow.vue"),
     },
     {
-        path: "/createCategory",
+        path: "/create-category",
+        name: "create_category_url",
         component: () => import("../pages/categoryCreate.vue"),
     },
     {
-        name: "editCategoryUrl",
         path: "/categories/edit/:id",
+        name: "edit_category_url",
         component: () => import("../pages/categoryEdit.vue"),
     },
     {
-        path: "/showCart",
+        path: "/show-cart",
+        name: "show_cart_url",
         component: () => import("../pages/cartShow.vue"),
     },
     {
         path: "/login",
-        name: "login_page",
-        component: () => import("../pages/loginComponent.vue"),
+        name: "login_page_url",
+        component: () => import("../pages/login.vue"),
     },
     {
         path: "/register",
-        component: () => import("../pages/registerComponent.vue"),
+        name: "register_page_url",
+        component: () => import("../pages/register.vue"),
     },
     {
         path: "/user",

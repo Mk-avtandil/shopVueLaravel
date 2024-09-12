@@ -18,7 +18,6 @@ class   AuthController extends Controller
            'name' => $request->get('name'),
            'email' => $request->get('email'),
            'password' => Hash::make($request->get('password')),
-            'password_confirmation' => Hash::make($request->get('password_confirmation')),
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -40,7 +39,6 @@ class   AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'user'
         ]);
     }
 

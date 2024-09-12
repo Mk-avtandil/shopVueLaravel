@@ -1,30 +1,30 @@
 <script setup>
-    import axios from "axios";
-    import {onMounted, ref} from "vue";
+import axios from "axios";
+import {onMounted, ref} from "vue";
 
-    const categories = ref();
-    const data = ref(
-        {
-            name: '',
-            price: '',
-            description: '',
-            category_id: ''
-        }
-    );
+const categories = ref();
+const data = ref(
+    {
+        name: '',
+        price: '',
+        description: '',
+        category_id: ''
+    }
+);
 
-    onMounted(async () => {
-        categories.value = (await axios.get('/api/products/create')).data;
-    });
+onMounted(async () => {
+    categories.value = (await axios.get('/api/products/create')).data;
+});
 
-    const saveProduct = async () => {
-        await axios.post(`/api/products/save`, data.value);
-        data.value = {
-            name: '',
-            price: '',
-            description: '',
-            category_id: ''
-        };
+const saveProduct = async () => {
+    await axios.post(`/api/products/save`, data.value);
+    data.value = {
+        name: '',
+        price: '',
+        description: '',
+        category_id: ''
     };
+};
 
 </script>
 

@@ -35,10 +35,8 @@ class ProductController extends Controller
         return response()->json(['message' => 'Product created']);
     }
 
-    public function delete($id)
+    public function delete(Product $product)
     {
-        $product = Product::find($id);
-
         $product->delete();
 
         return response()->json(null, 204);
@@ -57,17 +55,15 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
-    public function update($id, ProductCreateRequest $request)
+    public function update(Product $product, ProductCreateRequest $request)
     {
         try {
-            $product = Product::findOrFail($id);
             $product->update([
                 'name' => $request->get('name'),
                 'price' => $request->get('price'),
                 'description' => $request->get('description'),
                 'category_id' => $request->get('category_id')
             ]);
-            $product->save();
 
             return response()->json([
                 "message" => "Product updated successfully",

@@ -18,16 +18,16 @@ Route::prefix('products')
         Route::get('/', [ProductController::class, 'index'])->name('index');
         Route::get('/create', [ProductController::class, 'create'])->name('create');
         Route::post('/save', [ProductController::class, 'save'])->name('save');
-        Route::delete('/delete/{product:id}', [ProductController::class, 'delete'])->name('delete');
-        Route::get('/detail/{product:id}', [ProductController::class, 'detail'])->name('detail');
-        Route::get('/edit/{product:id}', [ProductController::class, 'edit'])->name('edit')->middleware('auth:sanctum');
-        Route::put('/update/{product:id}', [ProductController::class, 'update'])->name('update');
+        Route::delete('/delete/{product}', [ProductController::class, 'delete'])->name('delete');
+        Route::get('/detail/{product}', [ProductController::class, 'detail'])->name('detail');
+        Route::get('/edit/{product}', [ProductController::class, 'edit'])->name('edit')->middleware('auth:sanctum');
+        Route::put('/update/{product}', [ProductController::class, 'update'])->name('update');
     });
 
 Route::prefix('comments')
     ->name('comment.')
     ->group(function () {
-        Route::post('/{product:id}/save', [CommentController::class, 'save'])->name('save')->middleware('auth:sanctum');
+        Route::post('/{product}/save', [CommentController::class, 'save'])->name('save')->middleware('auth:sanctum');
     });
 
 Route::prefix('categories')
@@ -36,15 +36,15 @@ Route::prefix('categories')
         Route::get('/', [CategoryController::class, 'index'])->name('index');
         Route::get('/create', [CategoryController::class, 'create'])->name('create');
         Route::post('/save', [CategoryController::class, 'save'])->name('save');
-        Route::delete('/delete/{category:id}', [CategoryController::class, 'delete'])->name('delete');
-        Route::get('/edit/{category:id}', [CategoryController::class, 'edit'])->name('edit');
-        Route::put('/update/{category:id}', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/delete/{category}', [CategoryController::class, 'delete'])->name('delete');
+        Route::get('/edit/{category}', [CategoryController::class, 'edit'])->name('edit');
+        Route::put('/update/{category}', [CategoryController::class, 'update'])->name('update');
     });
 
 Route::prefix('carts')
     ->name('cart.')
     ->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('index');
-        Route::post('/add/{product:id}', [CartController::class, 'add'])->name('add');
+        Route::post('/add/{product}', [CartController::class, 'add'])->name('add');
         Route::post('/clear', [CartController::class, 'clearCart'])->name('clear');
     });

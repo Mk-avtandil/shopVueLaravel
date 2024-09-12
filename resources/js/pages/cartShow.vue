@@ -1,21 +1,21 @@
 <script setup>
-    import axios from "axios";
-    import {onMounted, ref} from "vue";
+import axios from "axios";
+import {onMounted, ref} from "vue";
 
-    const products = ref();
+const products = ref();
 
-    onMounted(async () => {
-        getProductFromCart();
-    });
+onMounted(async () => {
+    getProductFromCart();
+});
 
-    const getProductFromCart = async () => {
-        products.value = (await axios.get('/api/carts')).data
-    }
+const getProductFromCart = async () => {
+    products.value = (await axios.get('/api/carts')).data
+}
 
-    const clearCart = async () => {
-        await axios.post('/api/carts/clear');
-        getProductFromCart();
-    }
+const clearCart = async () => {
+    await axios.post('/api/carts/clear');
+    getProductFromCart();
+}
 </script>
 
 <template>

@@ -28,7 +28,7 @@
             <router-link to="/" class="btn bg-light" type="submit">Главная</router-link>
           </li>
           <li class="nav-item mx-2">
-              <router-link to="/createCategory" class="btn bg-light">Добавить категорию</router-link>
+              <router-link :to="{name: 'create_category_url'}" class="btn bg-light">Добавить категорию</router-link>
           </li>
         </ul>
       </div>
@@ -47,7 +47,7 @@
           <td>{{ category.name }}</td>
           <td>{{ category.products_count }}шт</td>
           <td>
-              <router-link :to="{name: 'editCategoryUrl', params: {id: category.id}}" class="btn btn-info w-100">Изменить</router-link>
+              <router-link :to="{name: 'edit_category_url', params: {id: category.id}}" class="btn btn-info w-100">Изменить</router-link>
           </td>
           <td>
               <button class="w-100 btn btn-danger" @click.prevent="deleteCategory(category.id)">Удалить</button>

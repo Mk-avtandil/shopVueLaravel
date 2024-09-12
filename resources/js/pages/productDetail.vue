@@ -1,63 +1,63 @@
 <script setup>
-    import axios from "axios";
-    import {useRoute} from "vue-router";
-    import {onMounted, ref} from "vue";
+import axios from "axios";
+import {useRoute} from "vue-router";
+import {onMounted, ref} from "vue";
 
-    const route = useRoute()
-    const product = ref({})
-    const category = ref();
-    const comment = ref();
-    const user = ref(null);
-    const token = localStorage.getItem('token');
+const route = useRoute();
+const product = ref({})
+const category = ref();
+const comment = ref();
+const user = ref(null);
+const token = localStorage.getItem('token');
 
-    onMounted(async () => {
+onMounted(async () => {
+    product.value = (await axios.get(`/api/products/detail/${route.params.id}`)).data
+    await fetchUser();
+})
+
+const addProductToCart = async (id) => {
+    await axios.post(`/api/carts/add/${id}`);
+}
+
+const createComment = async () => {
+    await axios.post(`/api/comments/${route.params.id}/save`, {body: comment.value}, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }).then(async () => {
         product.value = (await axios.get(`/api/products/detail/${route.params.id}`)).data
-        await fetchUser();
-    })
+    });
+    comment.value = '';
+};
 
-    const addProductToCart = async (id) => {
-        await axios.post(`/api/carts/add/${id}`);
-    }
-
-    const createComment = async () => {
-        await axios.post(`/api/comments/${route.params.id}/save`, {body: comment.value}, {
+const fetchUser = async () => {
+    try {
+        const response = await axios.get('/api/user', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-        }).then(async () => {
-            product.value = (await axios.get(`/api/products/detail/${route.params.id}`)).data
         });
-        comment.value = '';
-    };
+        user.value = response.data;
+    } catch (error) {
+        console.error('Failed to fetch user', error);
+        router.push({ name: 'login_page_url' });
+    }
+};
 
-    const fetchUser = async () => {
-        try {
-            const response = await axios.get('/api/user', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            user.value = response.data;
-        } catch (error) {
-            console.error('Failed to fetch user', error);
-            router.push({ name: 'products_page' });
-        }
-    };
-
-    const logout = async () => {
-        try {
-            await axios.get('/api/logout', {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.reload();
-        } catch (error) {
-            console.error('Logout failed', error);
-        }
-    };
+const logout = async () => {
+    try {
+        await axios.get('/api/logout', {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.reload();
+    } catch (error) {
+        console.error('Logout failed', error);
+    }
+};
 </script>
 
 
@@ -73,10 +73,10 @@
                 </ul>
                 <ul class="navbar-nav ms-auto p-2">
                     <li class="nav-item mx-2">
-                        <router-link to="/showCart" class="btn bg-light" type="submit">Корзина</router-link>
+                        <router-link :to="{name: 'show_cart_url'}" class="btn bg-light" type="submit">Корзина</router-link>
                     </li>
                     <li class="nav-item mx-2" v-if="!user">
-                        <router-link to="/login" class="btn bg-light" type="submit">Login</router-link>
+                        <router-link :to="{name: 'login_page_url'}" class="btn bg-light" type="submit">Login</router-link>
                     </li>
                     <li class="nav-item max-2" v-if="user">
                         <button class="btn bg-light">{{user?.name}}</button>
@@ -113,7 +113,7 @@
                     </tr>
                 </table>
                 <div v-if="user">
-                    <router-link :to="{name: 'editeProductUrl', params: {id: product.id}}" class="btn btn-warning w-100">Изменить</router-link>
+                    <router-link :to="{name: 'edite_product_url', params: {id: product.id}}" class="btn btn-warning w-100">Изменить</router-link>
                 </div>
                 <div v-if="!user">
                     <button class="btn btn-danger w-100">Авторизуйтесь для редактирования</button>

@@ -17,14 +17,14 @@ class CartController extends Controller
 
     public function add(Product $product)
     {
-        $cartItem = Cart::where('product_id', $product->id)->first();
+        $cartItem = Cart::where('product_id', $product)->first();
 
         if ($cartItem) {
             $cartItem->quantity++;
             $cartItem->save();
         } else {
             Cart::create([
-                'product_id' => $product->id,
+                'product_id' => $product,
                 'quantity' => 1,
             ]);
         }

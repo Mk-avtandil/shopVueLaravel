@@ -43,7 +43,7 @@ const fetchUser = async () => {
         user.value = response.data;
     } catch (error) {
         console.error('Failed to fetch user', error);
-        router.push({ name: 'products_page' });
+        router.push({ name: 'products_page_url' });
     }
 };
 
@@ -77,19 +77,19 @@ const logout = async () => {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav p-2">
                     <li class="nav-item mx-2">
-                        <router-link to="/showCategory" class="btn bg-light" type="submit">Категории</router-link>
+                        <router-link :to="{name: 'show_category_url'}" class="btn bg-light" type="submit">Категории</router-link>
                     </li>
                     <li class="nav-item mx-2">
-                        <router-link to="/createProduct" class="btn bg-light">Добавить новые продукты</router-link>
+                        <router-link :to="{name: 'create_product_url'}" class="btn bg-light">Добавить новые продукты</router-link>
                     </li>
 
                 </ul>
                 <ul class="navbar-nav ms-auto p-2">
                     <li class="nav-item mx-2">
-                        <router-link to="/showCart" class="btn bg-light" type="submit">Корзина</router-link>
+                        <router-link :to="{name: 'show_cart_url'}" class="btn bg-light" type="submit">Корзина</router-link>
                     </li>
                     <li class="nav-item mx-2" v-if="!user">
-                        <router-link to="/login" class="btn bg-light" type="submit">Login</router-link>
+                        <router-link :to="{name: 'login_page_url'}" class="btn bg-light" type="submit">Login</router-link>
                     </li>
                     <li class="nav-item max-2" v-if="user">
                         <button class="btn bg-light">{{user?.name}}</button>
@@ -115,7 +115,7 @@ const logout = async () => {
                 <td>{{ product.price }}</td>
                 <td>{{ product.category }}</td>
                 <td>
-                    <router-link :to="{name: 'detailUrl', params: {id: product.id}}" class="btn btn-info w-100">Подробнее</router-link>
+                    <router-link :to="{name: 'detail_product_url', params: {id: product.id}}" class="btn btn-info w-100">Подробнее</router-link>
                 </td>
                 <td>
                     <button class="w-100 btn btn-success" @click.prevent="addProductToCart(product.id)">Добавить в корзину</button>

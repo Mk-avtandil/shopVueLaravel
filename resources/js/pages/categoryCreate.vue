@@ -38,7 +38,7 @@ const saveCategory = async () => {
                 <input v-model="name" type="text" class="form-control">
             </div>
             <div class="form-group my-3">
-                <router-link to="/showCategory" class="btn btn-primary" type="submit">Назад</router-link>
+                <router-link :to="{name: 'show_category_url'}" class="btn btn-primary" type="submit">Назад</router-link>
                 <button @click.prevent="saveCategory()" class="btn btn-primary mx-2" type="submit">Сохранить</button>
             </div>
         </form>
